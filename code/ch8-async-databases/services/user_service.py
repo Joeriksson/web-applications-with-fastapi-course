@@ -15,7 +15,14 @@ async def user_count() -> int:
         return result.scalar()
 
 
-async def create_account(name: str, email: str, password: str) -> User:
+async def create_account(name: Optional[str], email: Optional[str], password: Optional[str]) -> User:
+    if not password:
+        raise Exception('password is required')
+    if not email:
+        raise Exception('email is required')
+    if not name:
+        raise Exception('name is required')
+
     user = User()
     user.email = email
     user.name = name

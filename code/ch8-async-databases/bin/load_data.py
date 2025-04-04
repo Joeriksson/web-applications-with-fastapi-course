@@ -107,7 +107,7 @@ def find_users(data: List[dict]) -> dict:
 
     with progressbar.ProgressBar(max_value=len(data)) as bar:
         for idx, p in enumerate(data):
-            info = p.get('info')
+            info = p.get('info', {})
             found_users.update(get_email_and_name_from_text(info.get('author'), info.get('author_email')))
             found_users.update(get_email_and_name_from_text(info.get('maintainer'), info.get('maintainer_email')))
             bar.update(idx)
@@ -181,7 +181,7 @@ def load_package(data: dict, user_lookup: Dict[str, User]):
 
         p.author = info.get('author')
         p.author_email = info.get('author_email')
-        p.license = detect_license(info.get('license'))
+        p.license = detect_license(info.get('license')) or 'MIT'
 
         session = db_session.create_session()
         session.add(p)
@@ -227,7 +227,7 @@ def build_releases(package_id: str, releases: dict) -> List[Release]:
 
         r = Release()
         r.package_id = package_id
-        r.major_ver, r.minor_ver, r.build_ver = make_version_num(k)
+        r.major_ver, r.minor_ver, r.build_ver = make_version_num(k) # type: ignore[reportGeneralTypeIssues]
         r.created_date = parse(v.get('upload_time'))
         r.comment = v.get('comment_text')
         r.url = v.get('url')
