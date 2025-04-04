@@ -22,14 +22,14 @@ async def index(request: Request):
 
 
 @router.get('/account/register', include_in_schema=False)
-@template()
+@template(template_file='account/register.pt')
 def register_get(request: Request):
     vm = RegisterViewModel(request)
     return vm.to_dict()
 
 
 @router.post('/account/register', include_in_schema=False)
-@template()
+@template(template_file='account/register.pt')
 async def register_post(request: Request):
     vm = RegisterViewModel(request)
     await vm.load()
